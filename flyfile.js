@@ -27,7 +27,7 @@ exports.watch = function * () {
 
 exports.build = function * () {
 	yield this.clear(tar);
-	yield this.serial(['lint', 'styles', 'copies', 'vendor']);
+	yield this.serial(['lint', 'core', 'styles', 'copies', 'vendor']);
 }
 
 exports.lint = function * () {
