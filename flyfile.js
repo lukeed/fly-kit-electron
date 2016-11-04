@@ -4,14 +4,16 @@ const connect = require('electron-connect');
 
 let electron;
 const tar = 'dist';
-// const node = 'node_modules';
+const node = 'node_modules';
 
 const src = {
 	app: 'src/index.js',
 	css: 'src/styles/**/*.sass',
 	copy: 'src/*.html',
 	js: 'src/**/*.js',
-	vendor: []
+	vendor: [
+		`${node}/todomvc-common/base.js`
+	]
 };
 
 exports.watch = function * () {
@@ -45,7 +47,10 @@ exports.vendor = function * () {
 }
 
 exports.styles = function * () {
-	yield this.source('src/styles/app.sass').sass({outputStyle: 'compressed'}).target(tar);
+	yield this.source('src/styles/app.sass').sass({
+		outputStyle: 'compressed',
+		includePaths: [node]
+	}).target(tar);
 	reload();
 }
 
