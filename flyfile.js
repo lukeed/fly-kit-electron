@@ -10,7 +10,7 @@ const src = {
 	app: 'src/index.js',
 	css: 'src/styles/**/*.sass',
 	copy: 'src/*.html',
-	js: 'src/**/*.js',
+	js: 'src/scripts/*.js',
 	vendor: [
 		`${node}/todomvc-common/base.js`
 	]
@@ -18,7 +18,7 @@ const src = {
 
 exports.watch = function * () {
 	yield this.clear(tar);
-	yield this.watch([src.js, `!${src.app}`], 'scripts');
+	yield this.watch(src.js, 'scripts');
 	yield this.watch(src.vendor, 'vendor');
 	yield this.watch(src.copy, 'copies');
 	yield this.watch(src.css, 'styles');
@@ -32,8 +32,13 @@ exports.build = function * () {
 	yield this.serial(['lint', 'core', 'styles', 'copies', 'vendor']);
 }
 
-exports.lint = function * () {
-	yield this.source(src.js).xo();
+exports.lint = function * (o) {
+	yield this.source(o.src || src.js).xo();
+}
+
+exports.scripts = function * (o) {
+	yield this.source(o.src || src.js).xo().babel({preload: 1}).target(tar);
+	reload();
 }
 
 exports.core = function * () {
